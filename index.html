@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Explainer</title>
+</head>
+<body>
+    <h1>Upload an Image to Get an Explanation</h1>
+    <input type="file" id="imageInput" accept="image/*">
+    <button id="uploadButton">Upload</button>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('uploadButton').addEventListener('click', async () => {
+            const fileInput = document.getElementById('imageInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert('Please upload a file first.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const response = await fetch('http://127.0.0.1:5000/analyze_image', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.json();
+            document.getElementById('result').innerText = `Caption: ${data.caption}\nExplanation: ${data.explanation}`;
+        });
+    </script>
+</body>
+</html>
